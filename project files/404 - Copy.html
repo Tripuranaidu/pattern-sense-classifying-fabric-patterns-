@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found - PatternAI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    .error-content {
+        background: white;
+        border-radius: 20px;
+        padding: 60px 40px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        max-width: 600px;
+        width: 100%;
+        margin: 20px;
+    }
+    
+    .error-number {
+        font-size: 8rem;
+        font-weight: bold;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        margin-bottom: 20px;
+    }
+    
+    .error-title {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+    
+    .error-description {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 40px;
+        line-height: 1.6;
+    }
+    
+    .error-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        text-decoration: none;
+    }
+    
+    .btn-outline-primary {
+        border: 2px solid #667eea;
+        color: #667eea;
+        padding: 10px 28px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        background: transparent;
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        border-color: transparent;
+        transform: translateY(-2px);
+        text-decoration: none;
+    }
+    
+    .error-illustration {
+        margin-bottom: 30px;
+        font-size: 5rem;
+        opacity: 0.8;
+    }
+    
+    .helpful-links {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 40px;
+        text-align: left;
+    }
+    
+    .helpful-links h5 {
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .helpful-links ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .helpful-links li {
+        padding: 8px 0;
+    }
+    
+    .helpful-links a {
+        color: #667eea;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .helpful-links a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+    
+    .search-box {
+        margin: 30px 0;
+    }
+    
+    .search-input {
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        padding: 12px 20px;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        display: block;
+        text-align: center;
+        transition: border-color 0.3s ease;
+    }
+    
+    .search-input:focus {
+        border-color: #667eea;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    @media (max-width: 768px) {
+        .error-number {
+            font-size: 6rem;
+        }
+        
+        .error-title {
+            font-size: 2rem;
+        }
+        
+        .error-description {
+            font-size: 1.1rem;
+        }
+        
+        .error-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .btn-primary,
+        .btn-outline-primary {
+            width: 100%;
+            max-width: 250px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="error-content">
+        <div class="error-illustration">🔍</div>
+        <div class="error-number">404</div>
+        <h1 class="error-title">Page Not Found</h1>
+        <p class="error-description">
+            Oops! The page you're looking for seems to have wandered off into the pattern void. 
+            Don't worry, even our AI gets confused sometimes!
+        </p>
+        
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search for something..." id="searchInput">
+        </div>
+        
+        <div class="error-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                🏠 Go Home
+            </a>
+            <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}" class="btn btn-outline-primary">
+                {% if session.get('user_id') %}
+                📊 Dashboard
+                {% else %}
+                🔐 Login
+                {% endif %}
+            </a>
+        </div>
+        
+        <div class="helpful-links">
+            <h5>Maybe you were looking for:</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul>
+                        <li><a href="{{ url_for('index') }}">🏠 Home Page</a></li>
+                        <li><a href="{{ url_for('about') }}">ℹ️ About PatternAI</a></li>
+                        <li><a href="{{ url_for('scenarios') }}">💼 Use Cases</a></li>
+                        <li><a href="{{ url_for('contact') }}">📞 Contact Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        {% if session.get('user_id') %}
+                        <li><a href="{{ url_for('dashboard') }}">📊 Your Dashboard</a></li>
+                        <li><a href="{{ url_for('classify') }}">🔍 Pattern Classification</a></li>
+                        <li><a href="{{ url_for('history') }}">📋 Classification History</a></li>
+                        <li><a href="{{ url_for('quality_control') }}">✅ Quality Control</a></li>
+                        {% else %}
+                        <li><a href="{{ url_for('login') }}">🔐 Login</a></li>
+                        <li><a href="{{ url_for('register') }}">📝 Create Account</a></li>
+                        <li><a href="{{ url_for('scenarios') }}">💡 See Examples</a></li>
+                        <li><a href="{{ url_for('about') }}">🤖 Learn About AI</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        const searchTerm = this.value.toLowerCase().trim();
+        
+        // Simple search routing based on keywords
+        if (searchTerm.includes('login') || searchTerm.includes('sign in')) {
+            window.location.href = '{{ url_for("login") }}';
+        } else if (searchTerm.includes('register') || searchTerm.includes('sign up') || searchTerm.includes('create account')) {
+            window.location.href = '{{ url_for("register") }}';
+        } else if (searchTerm.includes('dashboard') || searchTerm.includes('profile')) {
+            window.location.href = '{{ url_for("dashboard") if session.get("user_id") else url_for("login") }}';
+        } else if (searchTerm.includes('classify') || searchTerm.includes('upload') || searchTerm.includes('pattern')) {
+            window.location.href = '{{ url_for("classify") if session.get("user_id") else url_for("login") }}';
+        } else if (searchTerm.includes('history') || searchTerm.includes('past') || searchTerm.includes('previous')) {
+            window.location.href = '{{ url_for("history") if session.get("user_id") else url_for("login") }}';
+        } else if (searchTerm.includes('quality') || searchTerm.includes('control')) {
+            window.location.href = '{{ url_for("quality_control") if session.get("user_id") else url_for("login") }}';
+        } else if (searchTerm.includes('about') || searchTerm.includes('info')) {
+            window.location.href = '{{ url_for("about") }}';
+        } else if (searchTerm.includes('contact') || searchTerm.includes('support') || searchTerm.includes('help')) {
+            window.location.href = '{{ url_for("contact") }}';
+        } else if (searchTerm.includes('use case') || searchTerm.includes('scenario') || searchTerm.includes('example')) {
+            window.location.href = '{{ url_for("scenarios") }}';
+        } else if (searchTerm !== '') {
+            // Default to home page for any other search
+            window.location.href = '{{ url_for("index") }}';
+        }
+    }
+});
+
+// Add some easter eggs
+const easterEggs = [
+    'Try searching for "login", "dashboard", "patterns", or "about"',
+    'Lost in the pattern maze? Try "help" or "contact"',
+    'Looking for your account? Search "profile" or "dashboard"',
+    'Want to classify patterns? Search "classify" or "upload"'
+];
+
+let easterEggIndex = 0;
+setInterval(() => {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput === document.activeElement) return; // Don't change if user is typing
+    
+    searchInput.placeholder = easterEggs[easterEggIndex];
+    easterEggIndex = (easterEggIndex + 1) % easterEggs.length;
+}, 3000);
+</script>
+{% endblock %}

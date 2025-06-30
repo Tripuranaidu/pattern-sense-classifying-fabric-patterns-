@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - PatternAI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 1rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--primary-color);
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .action-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        text-align: center;
+        border: 2px solid var(--border-color);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .action-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .action-icon {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .action-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .action-description {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .recent-activity {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
+    }
+
+    .activity-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .activity-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .activity-list {
+        padding: 0;
+    }
+
+    .activity-item {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: background-color 0.2s ease;
+    }
+
+    .activity-item:hover {
+        background-color: var(--secondary-color);
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title-text {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .activity-meta {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .activity-result {
+        text-align: right;
+        font-size: 0.9rem;
+    }
+
+    .confidence-badge {
+        background: var(--success-color);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .no-activity {
+        padding: 3rem;
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .no-activity i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div style="padding: 0 2rem;">
+            <h1>Welcome back, {{ session.full_name }}!</h1>
+            <p>Here's your pattern classification overview</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <i class="fas fa-images stat-icon"></i>
+            <span class="stat-number">{{ stats.total_classifications }}</span>
+            <span class="stat-label">Total Classifications</span>
+        </div>
+
+        <div class="stat-card">
+            <i class="fas fa-calendar-month stat-icon"></i>
+            <span class="stat-number">{{ stats.this_month }}</span>
+            <span class="stat-label">This Month</span>
+        </div>
+
+        <div class="stat-card">
+            <i class="fas fa-bullseye stat-icon"></i>
+            <span class="stat-number">{{ stats.accuracy_rate }}%</span>
+            <span class="stat-label">Accuracy Rate</span>
+        </div>
+
+        <div class="stat-card">
+            <i class="fas fa-clock stat-icon"></i>
+            <span class="stat-number">{{ stats.processing_time_avg }}s</span>
+            <span class="stat-label">Avg Processing Time</span>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="{{ url_for('classify') }}" class="action-card">
+            <i class="fas fa-upload action-icon"></i>
+            <div class="action-title">Classify Pattern</div>
+            <div class="action-description">Upload and analyze new fabric patterns</div>
+        </a>
+
+        <a href="{{ url_for('history') }}" class="action-card">
+            <i class="fas fa-history action-icon"></i>
+            <div class="action-title">View History</div>
+            <div class="action-description">Browse all your classifications</div>
+        </a>
+
+        <a href="{{ url_for('quality_control') }}" class="action-card">
+            <i class="fas fa-shield-alt action-icon"></i>
+            <div class="action-title">Quality Control</div>
+            <div class="action-description">Monitor quality metrics</div>
+        </a>
+
+        <a href="{{ url_for('profile') }}" class="action-card">
+            <i class="fas fa-user-cog action-icon"></i>
+            <div class="action-title">Profile Settings</div>
+            <div class="action-description">Manage your account</div>
+        </a>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+        <div class="activity-header">
+            <h2 class="activity-title">
+                <i class="fas fa-clock"></i>
+                Recent Classifications
+            </h2>
+            <a href="{{ url_for('history') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-right"></i>
+                View All
+            </a>
+        </div>
+
+        <div class="activity-list">
+            {% if recent_classifications %}
+                {% for classification in recent_classifications %}
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title-text">{{ classification.original_filename }}</div>
+                        <div class="activity-meta">
+                            {{ classification.timestamp }} • 
+                            Processing time: {{ classification.analysis.processing_time }}s
+                        </div>
+                    </div>
+                    <div class="activity-result">
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">
+                            {{ classification.analysis.pattern_name }}
+                        </div>
+                        <span class="confidence-badge">
+                            {{ classification.analysis.confidence }}% confidence
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-activity">
+                    <i class="fas fa-image"></i>
+                    <h3>No classifications yet</h3>
+                    <p>Start by uploading your first fabric pattern for analysis</p>
+                    <a href="{{ url_for('classify') }}" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-upload"></i>
+                        Upload First Pattern
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

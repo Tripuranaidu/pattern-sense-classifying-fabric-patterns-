@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+{% block title %}Contact Us - PatternAI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 0;
+        text-align: center;
+    }
+    
+    .contact-form {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        margin-top: -60px;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .contact-info {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 30px;
+        height: 100%;
+    }
+    
+    .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+    
+    .contact-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 20px;
+        font-size: 1.2rem;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .faq-item {
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        overflow: hidden;
+    }
+    
+    .faq-header {
+        padding: 20px;
+        background: #f8f9fa;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    
+    .faq-header:hover {
+        background: #e9ecef;
+    }
+    
+    .faq-content {
+        padding: 20px;
+        display: none;
+    }
+    
+    .office-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        transition: transform 0.3s ease;
+    }
+    
+    .office-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .office-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin: 0 auto 20px;
+        font-size: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="contact-hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="display-4 mb-4">Get in Touch</h1>
+                <p class="lead">Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Form Section -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="contact-form">
+                <h3 class="mb-4">Send us a Message</h3>
+                <form id="contactForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="firstName" class="form-label">First Name *</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="lastName" class="form-label">Last Name *</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="company" class="form-label">Company Name</label>
+                        <input type="text" class="form-control" id="company" name="company">
+                    </div>
+                    <div class="mb-3">
+                        <label for="industry" class="form-label">Industry</label>
+                        <select class="form-control" id="industry" name="industry">
+                            <option value="">Select Industry</option>
+                            <option value="fashion">Fashion & Apparel</option>
+                            <option value="textile">Textile Manufacturing</option>
+                            <option value="interior">Interior Design</option>
+                            <option value="retail">Retail</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject *</label>
+                        <select class="form-control" id="subject" name="subject" required>
+                            <option value="">Select Subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="demo">Request Demo</option>
+                            <option value="pricing">Pricing Information</option>
+                            <option value="technical">Technical Support</option>
+                            <option value="partnership">Partnership Opportunities</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message *</label>
+                        <textarea class="form-control" id="message" name="message" rows="5" placeholder="Tell us more about your requirements..." required></textarea>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="newsletter">
+                        <label class="form-check-label" for="newsletter">
+                            Subscribe to our newsletter for updates and industry insights
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="contact-info">
+                <h4 class="mb-4">Contact Information</h4>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <div>
+                        <h6>Email</h6>
+                        <p class="mb-0">hello@patternai.com<br>support@patternai.com</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📞</div>
+                    <div>
+                        <h6>Phone</h6>
+                        <p class="mb-0">+1 (555) 123-4567<br>+1 (555) 987-6543</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <div>
+                        <h6>Address</h6>
+                        <p class="mb-0">123 Innovation Drive<br>Tech Valley, CA 94000<br>United States</p>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">🕒</div>
+                    <div>
+                        <h6>Business Hours</h6>
+                        <p class="mb-0">Mon - Fri: 9:00 AM - 6:00 PM PST<br>Sat - Sun: Closed</p>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <h6>Follow Us</h6>
+                <div class="d-flex gap-3 mt-3">
+                    <a href="#" class="text-decoration-none">
+                        <div class="contact-icon" style="width: 40px; height: 40px; font-size: 1rem;">📘</div>
+                    </a>
+                    <a href="#" class="text-decoration-none">
+                        <div class="contact-icon" style="width: 40px; height: 40px; font-size: 1rem;">🐦</div>
+                    </a>
+                    <a href="#" class="text-decoration-none">
+                        <div class="contact-icon" style="width: 40px; height: 40px; font-size: 1rem;">💼</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Office Locations -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12 text-center mb-5">
+            <h2>Our Global Offices</h2>
+            <p class="lead">We have offices worldwide to better serve our international clients</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="office-card">
+                <div class="office-icon">🇺🇸</div>
+                <h5>San Francisco, USA</h5>
+                <p>123 Innovation Drive<br>Tech Valley, CA 94000</p>
+                <p class="text-muted">Headquarters</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="office-card">
+                <div class="office-icon">🇬🇧</div>
+                <h5>London, UK</h5>
+                <p>456 Fashion Street<br>London, EC1A 1BB</p>
+                <p class="text-muted">European Operations</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="office-card">
+                <div class="office-icon">🇮🇳</div>
+                <h5>Mumbai, India</h5>
+                <p>789 Textile Hub<br>Mumbai, MH 400001</p>
+                <p class="text-muted">Asian Operations</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Section -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12 text-center mb-5">
+            <h2>Frequently Asked Questions</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="faq-item">
+                <div class="faq-header" onclick="toggleFAQ(this)">
+                    <h6 class="mb-0">How accurate is PatternAI's classification system?</h6>
+                </div>
+                <div class="faq-content">
+                    <p>Our AI system achieves up to 98% accuracy in pattern classification, trained on millions of textile images across various pattern types including stripes, florals, geometric designs, and more.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-header" onclick="toggleFAQ(this)">
+                    <h6 class="mb-0">What file formats do you support?</h6>
+                </div>
+                <div class="faq-content">
+                    <p>We support all major image formats including PNG, JPG, JPEG, GIF, BMP, and WebP. Maximum file size is 16MB per image.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-header" onclick="toggleFAQ(this)">
+                    <h6 class="mb-0">Do you offer API access?</h6>
+                </div>
+                <div class="faq-content">
+                    <p>Yes, we provide RESTful API access for enterprise customers to integrate PatternAI directly into their existing workflows and systems.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-header" onclick="toggleFAQ(this)">
+                    <h6 class="mb-0">What industries do you serve?</h6>
+                </div>
+                <div class="faq-content">
+                    <p>We serve fashion and apparel, textile manufacturing, interior design, retail, and any industry that works with patterned fabrics and textiles.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-header" onclick="toggleFAQ(this)">
+                    <h6 class="mb-0">Is there a free trial available?</h6>
+                </div>
+                <div class="faq-content">
+                    <p>Yes, we offer a free account with limited usage to help you evaluate our service. You can upgrade to a paid plan anytime for unlimited access.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleFAQ(element) {
+    const content = element.nextElementSibling;
+    if (content.style.display === 'block') {
+        content.style.display = 'none';
+    } else {
+        // Close all other FAQs
+        document.querySelectorAll('.faq-content').forEach(item => {
+            item.style.display = 'none';
+        });
+        content.style.display = 'block';
+    }
+}
+
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Simple form validation
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+    
+    if (!firstName || !lastName || !email || !subject || !message) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+    
+    // Simulate form submission
+    alert('Thank you for your message! We will get back to you within 24 hours.');
+    this.reset();
+});
+</script>
+{% endblock %}

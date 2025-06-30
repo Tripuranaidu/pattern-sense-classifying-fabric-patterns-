@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% block title %}Quality Control - PatternAI{% endblock %}
+{% block extra_css %}
+<style>
+    .quality-dashboard {
+        padding: 2rem 0;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border-left: 4px solid #4f46e5;
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #4f46e5;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        color: #6b7280;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .quality-reports {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .quality-reports h3 {
+        background: #f8fafc;
+        padding: 1.25rem;
+        margin: 0;
+        border-bottom: 1px solid #e5e7eb;
+        color: #374151;
+    }
+    
+    .report-item {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .report-item:last-child {
+        border-bottom: none;
+    }
+    
+    .report-details {
+        flex: 1;
+    }
+    
+    .report-filename {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.25rem;
+    }
+    
+    .report-metrics {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.8rem;
+        color: #6b7280;
+    }
+    
+    .quality-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .badge-a-plus { background: #dcfce7; color: #166534; }
+    .badge-a { background: #dbeafe; color: #1e40af; }
+    .badge-b-plus { background: #fef3c7; color: #92400e; }
+    .badge-b { background: #fed7aa; color: #9a3412; }
+    .badge-c-plus { background: #fecaca; color: #b91c1c; }
+    .badge-c { background: #fecaca; color: #991b1b; }
+    .badge-d { background: #fee2e2; color: #7f1d1d; }
+    
+    .defect-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+    
+    .defect-none { background: #10b981; }
+    .defect-minor { background: #f59e0b; }
+    .defect-moderate { background: #ef4444; }
+    .defect-major { background: #dc2626; }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6b7280;
+    }
+    
+    .export-btn {
+        background: #059669;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-bottom: 1rem;
+    }
+    
+    .export-btn:hover {
+        background: #047857;
+    }
+    
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .report-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .report-metrics {
+            flex-wrap: wrap;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="quality-dashboard">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Quality Control Dashboard</h1>
+            <button class="export-btn" onclick="exportQualityReport()">
+                <i class="fas fa-download"></i> Export Report
+            </button>
+        </div>
+        
+        <!-- Quality Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.total_analyzed }}</div>
+                <div class="stat-label">Total Analyzed</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.excellent_quality }}</div>
+                <div class="stat-label">Excellent Quality</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.defects_found }}</div>
+                <div class="stat-label">Defects Found</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.avg_processing_time }}s</div>
+                <div class="stat-label">Avg Processing Time</div>
+            </div>
+        </div>
+        
+        <!-- Recent Quality Reports -->
+        <div class="quality-reports">
+            <h3><i class="fas fa-clipboard-list"></i> Recent Quality Reports</h3>
+            
+            {% if recent_reports %}
+                {% for report in recent_reports %}
+                <div class="report-item">
+                    <div class="report-details">
+                        <div class="report-filename">
+                            {{ report.original_filename }}
+                        </div>
+                        <div class="report-metrics">
+                            <span>
+                                <span class="defect-indicator defect-{{ report.analysis.quality_report.defect_level.lower().replace(' ', '-') }}"></span>
+                                {{ report.analysis.quality_report.defect_level }} Defects
+                            </span>
+                            <span>Consistency: {{ report.analysis.quality_report.pattern_consistency }}</span>
+                            <span>Color: {{ report.analysis.quality_report.color_uniformity }}</span>
+                            <span>{{ report.timestamp }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="quality-badge badge-{{ report.analysis.quality_report.overall_quality.lower().replace('+', '-plus') }}">
+                            {{ report.analysis.quality_report.overall_quality }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-chart-line fa-3x mb-3"></i>
+                    <h4>No Quality Reports Yet</h4>
+                    <p>Start classifying patterns to see quality analysis reports here.</p>
+                    <a href="{{ url_for('classify') }}" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Start Classifying
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function exportQualityReport() {
+    // Simulate export functionality
+    const data = {
+        timestamp: new Date().toISOString(),
+        stats: {{ stats | tojson }},
+        reports: {{ recent_reports | tojson }}
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `quality_report_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+</script>
+{% endblock %}
